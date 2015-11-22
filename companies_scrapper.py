@@ -21,23 +21,19 @@ def get_companies_data_from_web_page(data):
         if line.startswith(b'<div id="tableWrapper">'):
             index = 0
             for raw_data in str(line).split('<tr'):
-                process_row_data_el(index, raw_data)
-
-
-def process_row_data_el(index, raw_data):
-    company_name = ''
-    image_name = ''
-    image = None
-    for raw_data_el in raw_data.split('<td'):
-        if 'table_name' in raw_data_el:
-            company_name = get_company_name(raw_data_el)
-        if 'logo_mini' in raw_data_el:
-            image, image_name = get_company_logo(raw_data_el)
-    if company_name and image_name:
-        index += 1
-        db.companies.insert_one({"index": index, 'name': company_name, 'image_name': image_name,
-                                 'image': image})
-        print(index)
+                company_name = ''
+                image_name = ''
+                image = None
+                for raw_data_el in raw_data.split('<td'):
+                    if 'table_name' in raw_data_el:
+                        company_name = get_company_name(raw_data_el)
+                    if 'logo_mini' in raw_data_el:
+                        image, image_name = get_company_logo(raw_data_el)
+                if company_name and image_name:
+                    index += 1
+                    db.companies.insert_one({"index": index, 'name': company_name, 'image_name': image_name,
+                                             'image': image})
+                    print(index)
 
 
 def get_company_name(raw_data_el):
